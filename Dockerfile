@@ -7,6 +7,6 @@ WORKDIR /app
 USER deno
 
 COPY . /app
-RUN deno cache api.ts
+RUN deno cache main.ts
 
-CMD ["run", "--allow-net", "--allow-env", "--allow-read", "api.ts"]
+CMD ["run", "--allow-net", "--allow-env", "--allow-read", "main.ts"]
