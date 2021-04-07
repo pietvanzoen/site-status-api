@@ -1,11 +1,9 @@
 import "https://deno.land/x/dotenv/load.ts";
-import {
-  Response,
-  serve,
-  ServerRequest,
-} from "https://deno.land/std@0.92.0/http/server.ts";
-import { buildStatuses } from "./build-statuses.ts";
-import { loadConfig } from "./config.ts";
+import { serve } from "https://deno.land/std@0.92.0/http/server.ts";
+import { loadConfig } from "./lib/config.ts";
+import { flow } from "./lib/helpers.ts";
+import { buildStatusRequests, StatusRequest } from "./lib/build-statuses.ts";
+import { makeJSONResponse, notFound } from "./lib/api.ts";
 
 const PORT = 8080;
 const s = serve({ port: PORT });
@@ -20,7 +18,14 @@ for await (const req of s) {
       const config = loadConfig(
         Deno.env.get("SSAPI_CONFIG") || "./config.yaml",
       );
-      const statuses = await buildStatuses(config.statuses);
+
+      const statuses = await Promise.all(config.statuses.map(flow([
+        buildStatusRequests,
+        ([[url, options], buildStatusUpdate]: StatusRequest) =>
+          fetch(url, options)
+            .then((r) => r.json().then(buildStatusUpdate)),
+      ])));
+
       req.respond(makeJSONResponse(200, {
         statuses,
       }));
@@ -31,20 +36,4 @@ for await (const req of s) {
       }));
     }
   }
-}
-
-function notFound(): Response {
-  return makeJSONResponse(404, {
-    message: "Not found",
-  });
-}
-
-function makeJSONResponse(status: number, body: any): Response {
-  const headers = new Headers();
-  headers.append("content-type", "application/json");
-  return {
-    status,
-    headers,
-    body: JSON.stringify(body),
-  };
 }
