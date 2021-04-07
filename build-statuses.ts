@@ -1,4 +1,3 @@
-
 export interface StatusConfig {
   name: string;
   freshpingCheckId?: number;
@@ -33,7 +32,7 @@ function fetchFreshpingStatus(config: StatusConfig): Promise<StatusUpdate> {
   )
     .then((resp) => resp.json())
     .then((data) => {
-      console.log({ name: config.name, data })
+      console.log({ name: config.name, data });
       return {
         name: config.name,
         currentStatus: data.state === "AV" ? "ok" : "error",
@@ -42,8 +41,8 @@ function fetchFreshpingStatus(config: StatusConfig): Promise<StatusUpdate> {
 }
 
 function fetchHealthcheckStatus(config: StatusConfig): Promise<StatusUpdate> {
-    const headers = new Headers();
-  headers.append("x-api-key", Deno.env.get("HEALTHCHECKIO_API_KEY") || '');
+  const headers = new Headers();
+  headers.append("x-api-key", Deno.env.get("HEALTHCHECKIO_API_KEY") || "");
   return fetch(
     `https://healthchecks.io/api/v1/checks/${config.healthcheckId}`,
     {
@@ -52,11 +51,10 @@ function fetchHealthcheckStatus(config: StatusConfig): Promise<StatusUpdate> {
   )
     .then((resp) => resp.json())
     .then((data) => {
-      console.log({ name: config.name, data })
+      console.log({ name: config.name, data });
       return {
         name: config.name,
         currentStatus: data.status === "up" ? "ok" : "error",
       };
     });
-
 }

@@ -12,16 +12,24 @@ const s = serve({ port: PORT });
 
 console.log(` Listening on http://localhost:${PORT}/`);
 
-const config = loadConfig(Deno.env.get("SSAPI_CONFIG") || "./config.yaml");
-
 for await (const req of s) {
   if (req.url !== "/") {
     req.respond(notFound());
   } else {
-    const statuses = await buildStatuses(config.statuses);
-    req.respond(makeJSONResponse(200, {
-      statuses,
-    }));
+    try {
+      const config = loadConfig(
+        Deno.env.get("SSAPI_CONFIG") || "./config.yaml",
+      );
+      const statuses = await buildStatuses(config.statuses);
+      req.respond(makeJSONResponse(200, {
+        statuses,
+      }));
+    } catch (error) {
+      console.error(error);
+      req.respond(makeJSONResponse(500, {
+        message: error.toString() || "Something went wrong",
+      }));
+    }
   }
 }
 
