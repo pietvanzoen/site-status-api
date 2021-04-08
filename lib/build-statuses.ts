@@ -15,17 +15,14 @@ export const SERVICE_STRATEGIES: { [name: string]: ServiceStrategy } = {
   },
 };
 
-export function buildStatusRequests(
-  { service, name, id }: StatusConfig,
-): StatusRequest {
+export function buildStatusRequests(config: StatusConfig): StatusRequest {
+  const { service, name, id } = config;
   const { url, options = {}, parseStatus } = SERVICE_STRATEGIES[service];
-  return [
-    [url(id), options],
-    (data: any) => ({
-      name,
-      currentStatus: parseStatus(data),
-    }),
-  ];
+  return {
+    config,
+    fetchArgs: { url: url(id), options },
+    parseStatus,
+  };
 }
 
 export interface StatusConfig {
@@ -34,10 +31,18 @@ export interface StatusConfig {
   id: string | number;
 }
 
-export type StatusRequest = [FetchArgs, StatusUpdateParser];
+export interface StatusRequest {
+  config: StatusConfig;
+  fetchArgs: FetchArgs;
+  parseStatus: StatusParser;
+}
 
-export type FetchArgs = [string, RequestInit];
-type CurrentStatus = "ok" | "error";
+export interface FetchArgs {
+  url: string;
+  options: RequestInit;
+}
+
+type CurrentStatus = "ok" | "error" | "unknown";
 interface StatusUpdate {
   name: string;
   currentStatus: CurrentStatus;

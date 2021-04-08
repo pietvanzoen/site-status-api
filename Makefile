@@ -6,7 +6,7 @@ test:
 	deno test --allow-env
 
 dev:
-	deno run --allow-net --allow-read --allow-env ./main.ts
+	DEBUG=* deno run --allow-net --allow-read --allow-env ./main.ts
 
 build: test
 	docker build -t pietvanzoen/site-status-api:latest .
