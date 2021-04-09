@@ -4,14 +4,13 @@ import { flow } from "./helpers.ts";
 import { buildStatusRequests, StatusRequest } from "./build-statuses.ts";
 
 const startTime = Date.now();
+const CONFIG_PATH = Deno.env.get("SSAPI_CONFIG") || "./config.yaml";
 
 export function initRouter(): Router {
   const router = new Router();
 
   router.get("/status", async (ctx) => {
-    const config = loadConfig(
-      Deno.env.get("SSAPI_CONFIG") || "./config.yaml",
-    );
+    const config = loadConfig(CONFIG_PATH);
 
     const statuses = await Promise.all(config.statuses.map(flow([
       buildStatusRequests,
@@ -38,6 +37,7 @@ export function initRouter(): Router {
   });
 
   router.get("/healthcheck", ({ response }) => {
+    loadConfig(CONFIG_PATH);
     response.status = Status.OK;
     response.body = {
       uptime: Date.now() - startTime,
