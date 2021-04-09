@@ -1,15 +1,26 @@
 
-install:
-	deno cache main.ts
+DENO_DIR = ./.deno
+export DENO_DIR
+ALLOW_ARGS = --allow-net --allow-read --allow-env
+DEP_ARGS = --lock=./lock.json --import-map=./deps.json
+
+clean:
+	rm -r $(DENO_DIR)
+
+cache:
+	deno cache $(DEP_ARGS) --lock-write main.ts **/*.test.ts
 
 test:
-	deno test --allow-env
+	deno test $(DEP_ARGS) $(ALLOW_ARGS)
 
 dev:
-	DEBUG=* deno run --allow-net --allow-read --allow-env ./main.ts
+	DEBUG=* denon run --cached-only $(ALLOW_ARGS) $(DEP_ARGS) ./main.ts
 
-build: test
+build:
 	docker build -t pietvanzoen/site-status-api:latest .
+
+start: build
+	docker run -it -p 8080:8080 -v $(PWD)/config.yaml:/app/config.yaml --env-file=./.env pietvanzoen/site-status-api:latest
 
 deploy:
 	docker push pietvanzoen/site-status-api:latest

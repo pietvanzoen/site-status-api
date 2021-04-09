@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals } from "std/testing/asserts.ts";
 import { flow } from "./helpers.ts";
 
 const plusOne = (n: number) => n + 1;

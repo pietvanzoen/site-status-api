@@ -1,7 +1,15 @@
 # site-status-api
 
-## Start
+## Getting started
+
+### Install Denon
 
 ```
-deno run --allow-net --allow-read --allow-env api.ts
+deno install -qAf --reload --unstable https://deno.land/x/denon@2.4.7/denon.ts
+```
+
+### Run
+
+```
+make dev
 ```

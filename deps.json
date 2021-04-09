@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "debug/": "https://deno.land/x/debug@0.2.0/",
+    "dotenv/": "https://deno.land/x/dotenv@v2.0.0/",
+    "oak/": "https://deno.land/x/oak@v6.5.0/",
+    "std/": "https://deno.land/std@0.92.0/"
+  }
+}

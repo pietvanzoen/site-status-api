@@ -211,3 +211,5 @@ $RECYCLE.BIN/
 .env
 config.yaml
 config.yml
+.deno
+ssapi
