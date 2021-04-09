@@ -1,3 +1,4 @@
+import "dotenv/load.ts";
 import { debug } from "debug/mod.ts";
 import { Application } from "oak/mod.ts";
 import { handleError } from "./lib/error-handler.ts";
