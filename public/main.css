@@ -1,0 +1,7 @@
+@import "https://bootswatch.com/4/darkly/bootstrap.min.css";
+@import "https://use.fontawesome.com/releases/v5.7.2/css/solid.css";
+@import "https://use.fontawesome.com/releases/v5.7.2/css/fontawesome.css";
+
+.container {
+  max-width: 600px;
+}

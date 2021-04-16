@@ -1,6 +1,6 @@
 import "dotenv/load.ts";
 import { debug } from "debug/mod.ts";
-import { Application } from "oak/mod.ts";
+import { Application, send } from "oak/mod.ts";
 import { handleError } from "./lib/error-handler.ts";
 import { initRouter } from "./lib/router.ts";
 import { logger, responseTime } from "./lib/response-logger.ts";
@@ -15,6 +15,13 @@ app.use(logger);
 app.use(responseTime);
 app.use(handleError);
 app.use(router.routes());
+app.use(async (context) => {
+  await send(context, context.request.url.pathname, {
+    root: `${Deno.cwd()}/public`,
+    index: "index.html",
+  });
+});
+
 app.use(router.allowedMethods());
 
 log(`Listening on http://localhost:${PORT}`);

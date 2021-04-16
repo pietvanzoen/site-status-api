@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <title>Status</title>
+  </head>
+  <body>
+
+    <main class="container mt-5 mb-5">
+      <header id="status-header">
+      </header>
+
+      <div id="status-list" class="list-group"></div>
+
+      <div id="loader" class="d-none text-center mt-3">
+        <i class="fas fa-spin fa-sync-alt"></i>
+      </div>
+
+      <template id="status-header-template">
+        <div class="card text-white mb-3 status-header-container">
+          <div class="card-body">
+            <h4 class="card-title mb-0"><i class="fas status-header-icon"></i> <span class="status-header-text">TEXT</span></h4>
+          </div>
+        </div>
+      </template>
+
+      <template id="status-item-template">
+        <div class="list-group-item status-container">
+          <div class="d-flex flex-row align-items-center justify-content-between">
+              <div class="h4 status-name">{{NAME}}</div>
+              <i class="h2 status-icon fas {{ICON_CLASS}}"></i>
+          </div>
+        </div>
+      </template>
+
+    </main>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
