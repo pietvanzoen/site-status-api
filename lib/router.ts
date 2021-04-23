@@ -5,7 +5,7 @@ import { loadConfig } from "./config.ts";
 import { flow } from "./helpers.ts";
 import { buildStatusRequests, StatusRequest } from "./build-statuses.ts";
 
-const log = debug('router');
+const log = debug("router");
 const startTime = Date.now();
 const CONFIG_PATH = Deno.env.get("SSAPI_CONFIG") || "./config.yaml";
 
@@ -21,11 +21,11 @@ export function initRouter(): Router {
         const { url, options } = fetchArgs;
         return request(url, options)
           .then((status) => {
-            log('%o', status);
+            log("%o", status);
             return {
-            ...config,
-            currentStatus: parseStatus(status),
-          };
+              ...config,
+              currentStatus: parseStatus(status),
+            };
           })
           .catch((error) => {
             log(`Error: %s returned an error: %o`, config.name, error);
