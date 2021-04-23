@@ -1,5 +1,5 @@
 import { debug } from "debug/mod.ts";
-
+import { request } from "./request.ts";
 import { Router, Status } from "oak/mod.ts";
 import { loadConfig } from "./config.ts";
 import { flow } from "./helpers.ts";
@@ -19,12 +19,7 @@ export function initRouter(): Router {
       buildStatusRequests,
       ({ config, fetchArgs, parseStatus }: StatusRequest) => {
         const { url, options } = fetchArgs;
-        return fetch(url, options)
-          .then((resp) => {
-            if (resp.ok) return resp;
-            throw resp;
-          })
-          .then((r) => r.json())
+        return request(url, options)
           .then((status) => {
             log('%o', status);
             return {
