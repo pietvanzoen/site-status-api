@@ -30,11 +30,16 @@ const STATUS_MAP = {
     message: 'Error fetching status',
     variant: 'warning',
     icon: ['fa-exclamation-triangle']
+  },
+  'none':{
+    variant: 'secondary',
+    icon: []
   }
 };
 
 function main() {
   HEADER_CONTAINER.replaceChildren(makeStatusHeader('loading'));
+  LIST_CONTAINER.replaceChildren(...makePlaceHolderStatusItems(5));
   updateStatus();
 }
 
@@ -80,6 +85,9 @@ function getGlobalStatus(statuses) {
   return 'ok';
 }
 
+function makePlaceHolderStatusItems(size) {
+  return [...Array(size)].map(() => makeStatusItem({ name: '&nbsp;', currentStatus: 'none' }))
+}
 function makeStatusItems(statuses) {
   return statuses.map(makeStatusItem);
 }
