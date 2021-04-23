@@ -5,3 +5,10 @@
 .container {
   max-width: 600px;
 }
+
+#status-header {
+  height: 300px;
+}
+#status-list {
+  /* margin-top: -20vw; */
+}

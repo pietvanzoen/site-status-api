@@ -1,9 +1,17 @@
+import { renderStatusHeader } from "./three.js";
 const HEADER_CONTAINER = document.getElementById("status-header");
 const LIST_CONTAINER = document.getElementById("status-list");
 const ITEM_TEMPLATE = document.getElementById("status-item-template");
 const HEADER_TEMPLATE = document.getElementById("status-header-template");
 const LOADER = document.getElementById("loader");
 const UPDATE_DELAY_SECONDS = 30;
+
+const COLOR_MAP = {
+  info: "#2B84D3",
+  warning: "#EE8A11",
+  danger: "#DF342E",
+  success: "#17B279",
+};
 
 const STATUS_MAP = {
   "ok": {
@@ -14,6 +22,7 @@ const STATUS_MAP = {
   "error": {
     message: "DON'T PANIC",
     variant: "danger",
+    speed: 8,
     icon: ["fa-exclamation-triangle"],
   },
   "unknown": {
@@ -38,8 +47,10 @@ const STATUS_MAP = {
 };
 
 function main() {
-  HEADER_CONTAINER.replaceChildren(makeStatusHeader("loading"));
+  // HEADER_CONTAINER.replaceChildren(makeStatusHeader("loading"));
+  updateStatusHeader("loading");
   LIST_CONTAINER.replaceChildren(...makePlaceHolderStatusItems(5));
+
   updateStatus();
 }
 
@@ -49,13 +60,11 @@ function updateStatus() {
     .then((res) => res.ok ? res : Promise.reject(res))
     .then((res) => res.json())
     .then(({ statuses }) => {
-      HEADER_CONTAINER.replaceChildren(
-        makeStatusHeader(getGlobalStatus(statuses)),
-      );
+      updateStatusHeader(getGlobalStatus(statuses));
       LIST_CONTAINER.replaceChildren(...makeStatusItems(statuses));
     })
     .catch((error) => {
-      HEADER_CONTAINER.replaceChildren(makeStatusHeader("fetch-error"));
+      updateStatusHeader("fetch-error");
       console.error("Error fetching status", error);
     })
     .finally(() => {
@@ -64,16 +73,14 @@ function updateStatus() {
     });
 }
 
-function makeStatusHeader(statusType) {
-  const el = HEADER_TEMPLATE.content.cloneNode(true);
-  const container = el.querySelector(".status-header-container");
-  const icon = el.querySelector(".status-header-icon");
-  const text = el.querySelector(".status-header-text");
+function updateStatusHeader(statusType) {
   const status = STATUS_MAP[statusType];
-  container.classList.add(`bg-${status.variant}`);
-  icon.classList.add(...status.icon);
-  text.innerHTML = `&nbsp;&nbsp;${status.message}`;
-  return el;
+  const color = COLOR_MAP[status.variant];
+  renderStatusHeader(HEADER_CONTAINER, {
+    text: status.message,
+    color,
+    speed: status.speed,
+  });
 }
 
 function getGlobalStatus(statuses) {
